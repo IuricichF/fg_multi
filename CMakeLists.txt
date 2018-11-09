@@ -11,7 +11,6 @@ if (LINUX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3")
 elseif (APPLE)
     message(STATUS "Apple Env.")
-#    set(CMAKE_CXX_COMPILER /usr/local/bin/clang++-omp CACHE STRING "CXX compiler" FORCE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -O3")
 endif ()
 
@@ -22,7 +21,6 @@ if (Boost_FOUND)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Boost_CXX_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${Boost_EXE_LINKER_FLAGS}")
 endif ()
-
 
 
 add_subdirectory(source)

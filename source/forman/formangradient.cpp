@@ -108,7 +108,7 @@ void FormanGradient::computeFormanGradient(bool computeTopsByBatch){
     auto foo = bind(&FormanGradient::cmpSimplexesFiltr, this,_1,_2);
     time.start();
 
-    #pragma omp parallel for - debug omp version since it is not working
+    #pragma omp parallel for
     for(uint i=0; i<filtration.size(); i++){
         //cout << "vertex " << i << endl;
         vector<SSet> lwStars;
@@ -139,31 +139,6 @@ void FormanGradient::computeFormanGradient(bool computeTopsByBatch){
     time.stop();
     cout << "Forman gradient computed " << time.getElapsedTime() << endl;
 
-//here I was trying to print out everything for rivet
-//    fstream fStream("complexRivet.txt", ios::out);
-
-//    fStream << "bifiltration" << endl;
-//    fStream << "f1" << endl;
-//    fStream << "f2" << endl;
-
-//    if (fStream.is_open())
-//    {
-
-//        for(auto fset : filtrationAll){
-//            for(auto simpl : fset.second){
-//                vector<int> indexes = *simpl.getVertices();
-//                for(auto v : indexes)
-//                    fStream << v << " ";
-
-//                fStream << fset.first.first << " " << fset.first.second << endl;
-//            }
-//        }
-
-//    }
-
-//    fStream.close();
-
-    //sc.saveVTK("mesh.vtk");
 }
 
 void FormanGradient::splitVertexLowerStar(int v,vector<SSet>& lwStars){
