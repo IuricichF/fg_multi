@@ -62,7 +62,7 @@ private:
     bool cmpSimplexesFiltr(const implicitS& lhs, const implicitS& rhs); //true if the indexing of lhs is less than rhs (or if lhs is smaller than rhs). Used for homotopy expansion when working on a single sublevelset
     bool cmpInjectiveFiltr(const implicitS& lhs, const implicitS& rhs); //true if the injective filtration of lhs is less that rhs (or if lhs is smaller than rhs)
     bool sortVerticesFiltration(const int& v1,const int& v2); //true if the filtration of v1 is less than v2
-    bool filtrComparer(const pair<float,uint>& v1, const pair<float,uint>& v2) const; //true if v1 has a smaller value scalar value (float) or a smaller index (uint)
+    bool filtrComparer(const vector<float>& v1, const vector<float>& v2) const; //true if v1 has a smaller value scalar value (float) or a smaller index (uint)
     bool topologicalSorting(const implicitS& lhs, const implicitS& rhs); //true if the filtration of lhs is lower than rhs, or if lhs is smaller than rhs
 
     //comparison with the algorithm by [Allili et al. 2016]

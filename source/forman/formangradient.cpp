@@ -48,21 +48,28 @@ FormanGradient::FormanGradient(int argc, char** argv)
 
     //cout << "Start" << endl;
 
-    vector<pair<float,uint> > injectiveF(sc.getVerticesNum());
+    vector<vector<float> > injectiveF(sc.getVerticesNum());
 
     for(int i=0; i<nField; i++){
         for(int j=0;j<sc.getVerticesNum(); j++){
             float val=sc.getVertex(j).getCoordinate(i+3);
+
+            vector<float> values = sc.getVertex(j).getCoordinates();
+            values.erase(values.begin()+(i+3));
+            values.erase(values.begin(), values.begin()+3);
+            values.insert(values.begin(),val);
+            values.push_back(j);
+
             scalarValues[j][i]=val;
             //cout << val << endl;
-            injectiveF[j]=pair<float,uint>(val,j);
+            injectiveF[j]=vector<float>(values);
         }
         //cout << "Stop" << endl;
 
         sort(injectiveF.begin(),injectiveF.end(),bind(&FormanGradient::filtrComparer, this,_1,_2));
         int ind=0;
         for(auto p : injectiveF){
-            componentBasedFiltration[i][p.second]=ind++;
+            componentBasedFiltration[i][p.back()]=ind++;
         }
     }
 
@@ -110,7 +117,6 @@ void FormanGradient::computeFormanGradient(bool computeTopsByBatch){
 
     #pragma omp parallel for
     for(uint i=0; i<filtration.size(); i++){
-        //cout << "vertex " << i << endl;
         vector<SSet> lwStars;
         //time.start();
         splitVertexLowerStar(i,lwStars);
@@ -192,6 +198,7 @@ void FormanGradient::homotopy_expansion(SSet& simplexes){
         sdiv[s.getDim()].insert(s);
         alive++;
     }
+    cout << endl;
 
     int d=1;
 

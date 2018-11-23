@@ -90,11 +90,13 @@ bool FormanGradient::sortVerticesFiltration(const int& v1,const int& v2){
 }
 
 
-bool FormanGradient::filtrComparer(const pair<float,uint>& v1, const pair<float,uint>& v2) const{
-    if(v1.first == v2.first){
-        return v1.second < v2.second;
+bool FormanGradient::filtrComparer(const vector<float>& v1, const vector<float>& v2) const{
+
+    for( int i=0; i<v1.size(); i++){
+        if (v1[i] != v2[i]){
+          return v1[i] < v2[i];
+        }
     }
 
-    return v1.first < v2.first;
+    return false;
 }
-
