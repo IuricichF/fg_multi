@@ -198,7 +198,6 @@ void FormanGradient::homotopy_expansion(SSet& simplexes){
         sdiv[s.getDim()].insert(s);
         alive++;
     }
-    cout << endl;
 
     int d=1;
 

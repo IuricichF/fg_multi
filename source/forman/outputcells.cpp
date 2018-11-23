@@ -41,8 +41,7 @@ void FormanGradient::printBoundaryMatrices(SUMap& indexSimplexes){
         }
     }
 
-
-
+    cout << "Critical cells: " << index << endl;
     for(auto lvl : criticalS){
         for(auto s : lvl.second){
             SSet cells;
