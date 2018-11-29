@@ -72,6 +72,12 @@ public:
     Vertex& getVertex(int i);
     //return: vertex of index i
 
+    vector<float> getScalarFields(int i);
+    //return: scalar values for vertex i
+
+    float getScalarField(int i, int j);
+    //return scalar value j for vertex i
+
     vector<TopSimplex>& getTopSimplices(int d);
     //return: set of top-simplexes of dimendion d
 

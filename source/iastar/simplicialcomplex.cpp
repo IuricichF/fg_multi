@@ -185,6 +185,15 @@ Vertex& SimplicialComplex::getVertex(int vertex){
     return vertices[vertex];
 }
 
+vector<float> SimplicialComplex::getScalarFields(int vertex){
+    vector<float> scalar = vertices[vertex].getCoordinates();
+    return vector<float>(scalar.begin()+3, scalar.end());
+}
+
+float SimplicialComplex::getScalarField(int vertex, int index){
+    return vertices[vertex].getCoordinates()[3+index];
+}
+
 vector<TopSimplex>& SimplicialComplex::getTopSimplices(int dim){
 
     if(realIndex.find(dim) == realIndex.end())

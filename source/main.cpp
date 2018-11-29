@@ -8,12 +8,12 @@ int main(int argc, char* argv[])
     Timer time;
     MemoryUsage mem;
 
-    time.start();
 
     //reading the input
     FormanGradient grad = FormanGradient(argc,argv);
     mem.getValue_in_MB(true);
 
+    time.start();
     //computing the Forman gradient
     grad.computeFormanGradient(true);
 //    grad.computeFormanGradientAllili(true);
@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 
 
    SUMap indexSimplices;
-   grad.printBoundaryMatricesSimplicialComplex(indexSimplices);
+   // grad.printBoundaryMatricesSimplicialComplex(indexSimplices);
    grad.printBoundaryMatrices(indexSimplices);
 
 

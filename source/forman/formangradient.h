@@ -16,8 +16,8 @@ class FormanGradient
 {
 private:
     vector<uint> filtration; //for each vertex its filtration value
-    vector<vector<float> > scalarValues; //for each vertex its field value [Vertices x number of fields]
-    vector<vector<uint> > componentBasedFiltration; //injective function for each component [number of fields x Vertices ]
+//    vector<vector<float> > scalarValues; //for each vertex its field value [Vertices x number of fields]
+//    vector<vector<uint> > componentBasedFiltration; //injective function for each component [number of fields x Vertices ]
 
     GradientEncoding gradient;
     map<uint, SSet > criticalS;
@@ -33,16 +33,14 @@ public:
     //is computed once and stored explicitly (higher memory consumption but lower timings)
     void computeFormanGradient(bool batchTop);
 
-    //compute the Forman gradient on the input dataset, if batchTop=true the relation among vertices and incident top simplices
-    //is computed once and stored explicitly (higher memory consumption but lower timings)
-    void computeFormanGradientAllili(bool);
-
     //print critical points and 1-skeleton
     void print1skeleton();
     void printBoundaryMatrices(SUMap& criticalCells);
     void printBoundaryMatricesSimplicialComplex(SUMap &criticalCells);
 
 private:
+    inline int nFields(){return sc.getVertex(0).getCoordinates().size()-3;}
+
     SSet* vertexLowerStar(uint vert, uint d); //compute the lower star of vert (only simplices of dimension=d)
     void splitVertexLowerStar(int v,vector<SSet>& lwStars); //split the lower star of a vertex v according to the sublevelsets of the function
     void homotopy_expansion(SSet&); //apply homotopy expansion on a set of simplices
@@ -52,7 +50,6 @@ private:
     bool getPair(const implicitS &simpl, implicitS& next); //next is the simplex paired with simpl
     void freePair(const implicitS &next, const implicitS &pair); //remove pair (next,pair) from the gradient (NOTE: next has to be bigger than pair)
 
-    vector<uint> simplexFiltration(const implicitS &simpl); //return the vector-valued filtration for a simplex. Each component is obtained as the maximum of the filtrations of its vertices
     vector<float> simplexScalarValue(const implicitS &simpl); //return the vector-valued function for a simplex. Each component is obtained as the maximum of the function values of its vertices
 
     void computeBoundaryCell(implicitS const& cell, SSet& descCells); //given a critical i-simplex return the critical (i-1)-cells connected to it

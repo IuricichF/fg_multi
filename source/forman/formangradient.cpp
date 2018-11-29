@@ -30,10 +30,10 @@ FormanGradient::FormanGradient(int argc, char** argv)
     else{
         cout << "Unknown format" << endl;
     }
+    MemoryUsage mem;
+    mem.getValue_in_MB(true);
 
     cout << "Computing fields" << endl;
-    //buildFiltrations(sc);
-    //buildFiltrations2(argc,argv);
 
     int nField = sc.getVertex(0).getCoordinates().size()-3;
     cout << "Simplicial complex dimension " << sc.getComplexDim() << endl;
@@ -43,9 +43,6 @@ FormanGradient::FormanGradient(int argc, char** argv)
     gradient = GradientEncoding(sc);
 
     filtration = vector<uint>(sc.getVerticesNum(),0); //final filtration
-    componentBasedFiltration = vector<vector<uint> >(nField,vector<uint>(sc.getVerticesNum(),0)); //simulation of simplicity for each component
-    scalarValues = vector<vector<float> >(sc.getVerticesNum(),vector<float>(nField,0)); //input scalar values
-
     //cout << "Start" << endl;
 
     vector<vector<float> > injectiveF(sc.getVerticesNum());
@@ -60,37 +57,33 @@ FormanGradient::FormanGradient(int argc, char** argv)
             values.insert(values.begin(),val);
             values.push_back(j);
 
-            scalarValues[j][i]=val;
             //cout << val << endl;
             injectiveF[j]=vector<float>(values);
         }
         //cout << "Stop" << endl;
 
         sort(injectiveF.begin(),injectiveF.end(),bind(&FormanGradient::filtrComparer, this,_1,_2));
-        int ind=0;
-        for(auto p : injectiveF){
-            componentBasedFiltration[i][p.back()]=ind++;
-        }
     }
 
-    vector<vector<uint> > buildFiltration = vector<vector<uint> >(sc.getVerticesNum(),vector<uint>(nField,0));
-    for(int i=0; i<nField; i++){
-        for(int j=0; j<sc.getVerticesNum(); j++){
-            buildFiltration[j][i]=componentBasedFiltration[i][j];
-        }
-    }
+//    vector<vector<uint> > buildFiltration = vector<vector<uint> >(sc.getVerticesNum(),vector<uint>(nField,0));
+//    for(int i=0; i<nField; i++){
+//        for(int j=0; j<sc.getVerticesNum(); j++){
+//            buildFiltration[j][i]=componentBasedFiltration[i][j];
+//        }
+//    }
 
-    for(int i=0; i<sc.getVerticesNum(); i++){
-        buildFiltration[i].push_back(i);
-    }
+//    for(int i=0; i<sc.getVerticesNum(); i++){
+//        buildFiltration[i].push_back(i);
+//    }
 
-    sort(buildFiltration.begin(),buildFiltration.end());
+//    sort(buildFiltration.begin(),buildFiltration.end());
 
     //filtration created
     int ind=0;
-    for(auto vec : buildFiltration){
+    for(auto vec : injectiveF){
         filtration[vec.back()]=ind++;
     }
+
 }
 
 FormanGradient::~FormanGradient()
@@ -111,36 +104,21 @@ void FormanGradient::computeFormanGradient(bool computeTopsByBatch){
 
     cout << "Tops computed " << time.getElapsedTime() << endl;
 
-    map<pair<int,int>, SSet > filtrationAll;
+    // map<pair<int,int>, SSet > filtrationAll;
     auto foo = bind(&FormanGradient::cmpSimplexesFiltr, this,_1,_2);
     time.start();
 
     #pragma omp parallel for
     for(uint i=0; i<filtration.size(); i++){
         vector<SSet> lwStars;
-        //time.start();
         splitVertexLowerStar(i,lwStars);
-        //time.stop();
-        //lowerStar+=time.getElapsedTime();
 
-        //time.start();
         for(auto lw : lwStars){
             //uncomment here for old software
             homotopy_expansion(lw);
-            //cout << "done" << endl;
-
-
-            for(auto s : lw){
-                vector<uint> filtr = this->simplexFiltration(s);
-                pair<int,int> filrNew(filtr[0],filtr[1]);
-                if(filtrationAll.find(filrNew) == filtrationAll.end())
-                    filtrationAll[filrNew]=SSet(foo);
-                filtrationAll[filrNew].insert(s);
-            }
 
         }
-        //time.stop();
-        //homotopy+=time.getElapsedTime();
+
     }
     time.stop();
     cout << "Forman gradient computed " << time.getElapsedTime() << endl;
@@ -150,10 +128,10 @@ void FormanGradient::computeFormanGradient(bool computeTopsByBatch){
 void FormanGradient::splitVertexLowerStar(int v,vector<SSet>& lwStars){
 
     auto foo = bind(&FormanGradient::cmpSimplexesFiltr, this,_1,_2);
-    map<vector<uint>, SSet> lws;
+    map<vector<float>, SSet> lws;
     implicitS vert = implicitS(v);
 
-    vector<uint> filtrLvl = simplexFiltration(vert);
+    vector<float> filtrLvl = simplexScalarValue(vert);
 
 
     if(lws.find(filtrLvl) == lws.end()){
@@ -170,7 +148,7 @@ void FormanGradient::splitVertexLowerStar(int v,vector<SSet>& lwStars){
 
         for(auto s : *lw){
             //cout << s << endl;
-            vector<uint> filtrLvl = simplexFiltration(s);
+            filtrLvl = simplexScalarValue(s);
 
 //            for(auto v : filtrLvl)
 //                cout << v << " ";
@@ -219,7 +197,6 @@ void FormanGradient::homotopy_expansion(SSet& simplexes){
 
                         //cout << "prima di pair con " << nextPair << endl;
                         setPair(s,nextPair);
-
 
                         sdiv[d-1].erase(nextPair);
                         toRemove.push_back(s);
@@ -275,39 +252,17 @@ void FormanGradient::homotopy_expansion(SSet& simplexes){
     }
 }
 
- vector<uint> FormanGradient::simplexFiltration(const implicitS &simpl){
-
-     vector<uint> filtr(scalarValues[0].size(),0);
-
-     vector<int> vertices = simpl.getConstVertices();
-     for(uint i=0; i<filtr.size(); i++){
-         for(auto v : vertices){
-             if(componentBasedFiltration[i][v] > filtr[i])
-                 filtr[i]=componentBasedFiltration[i][v];
-         }
-     }
-
-
-     return filtr;
- }
 
  vector<float> FormanGradient::simplexScalarValue(const implicitS &simpl){
 
      vector<int> vertis = simpl.getConstVertices();
-     vector<float> filtr = scalarValues[vertis[0]];
+     vector<float> filtr = sc.getScalarFields(vertis[0]);
 
      for(uint i=0; i<filtr.size(); i++){
          for(auto v : vertis){
-             if(scalarValues[v][i] > filtr[i])
-                 filtr[i]=scalarValues[v][i];
+             if(sc.getScalarField(v,i) > filtr[i])
+                 filtr[i]=sc.getScalarField(v,i);
          }
-
-//         float val=0;
-//         for(auto v : vertis){
-//             val +=scalarValues[v][i];
-//         }
-//         val = val/(float)filtr.size();
-//         filtr[i]=val;
      }
 
 

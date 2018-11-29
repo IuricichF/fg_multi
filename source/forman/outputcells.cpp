@@ -6,7 +6,7 @@ void FormanGradient::printBoundaryMatrices(SUMap& indexSimplexes){
     auto foo = bind(&FormanGradient::cmpSimplexesFiltr, this,_1,_2);
     SUMap criticalCells = SUMap(foo);
     uint index=0;
-    vector<map<float,uint> > fieldValues = vector<map<float,uint> >(componentBasedFiltration.size());
+    vector<map<float,uint> > fieldValues = vector<map<float,uint> >(nFields());
 
     for(auto lvl : criticalS){
         for(auto s : lvl.second){
@@ -41,6 +41,9 @@ void FormanGradient::printBoundaryMatrices(SUMap& indexSimplexes){
         }
     }
 
+    Timer time;
+
+    time.start();
     cout << "Critical cells: " << index << endl;
     for(auto lvl : criticalS){
         for(auto s : lvl.second){
@@ -50,25 +53,28 @@ void FormanGradient::printBoundaryMatrices(SUMap& indexSimplexes){
                 computeBoundaryCell(s, cells);
 
 
-            if(indexSimplexes.size() != 0){
-                assert(indexSimplexes.find(s) != indexSimplexes.end());
-                out << "[" << indexSimplexes[s] << "] ";
-            }
-            else
-                out << "[-1] ";
-
-            out << lvl.first << " ";
-            for(auto c : cells)
-                out << criticalCells[c] << " ";
-            out << ": ";
-
-            vector<float> fVal = simplexScalarValue(s);
-            for(int i=0; i<fVal.size(); i++){
-                out << fieldValues[i][fVal[i]] << " ";
-            }
-            out << endl;
+            // if(indexSimplexes.size() != 0){
+            //     assert(indexSimplexes.find(s) != indexSimplexes.end());
+            //     out << "[" << indexSimplexes[s] << "] ";
+            // }
+            // else
+            //     out << "[-1] ";
+            //
+            // out << lvl.first << " ";
+            // for(auto c : cells)
+            //     out << criticalCells[c] << " ";
+            // out << ": ";
+            //
+            // vector<float> fVal = simplexScalarValue(s);
+            // for(int i=0; i<fVal.size(); i++){
+            //     out << fieldValues[i][fVal[i]] << " ";
+            // }
+            // out << endl;
         }
     }
+
+    time.stop();
+    cout << time.getElapsedTime() << endl;
 
     out.close();
 }
@@ -79,7 +85,7 @@ void FormanGradient::printBoundaryMatricesSimplicialComplex(SUMap& criticalCells
     auto foo = bind(&FormanGradient::cmpSimplexesFiltr, this,_1,_2);
     criticalCells = SUMap(foo);
     uint index=0;
-    vector<map<float,uint> > fieldValues = vector<map<float,uint> >(componentBasedFiltration.size());
+    vector<map<float,uint> > fieldValues = vector<map<float,uint> >(nFields());
 
     map<uint, SSet > incidenceGraph;
 
