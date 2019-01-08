@@ -10,22 +10,22 @@ int main(int argc, char* argv[])
 
 
     //reading the input
+    time.start();
     FormanGradient grad = FormanGradient(argc,argv);
+    time.stop();
+    cout << "Simplicial complex loaded in " << time.getElapsedTime() << " seconds " << endl;
     mem.getValue_in_MB(true);
+
 
     time.start();
     //computing the Forman gradient
     grad.computeFormanGradient(true);
-//    grad.computeFormanGradientAllili(true);
+    time.stop();
+    cout << "Forman gradient computed in " << time.getElapsedTime() << " seconds " << endl;
     mem.getValue_in_MB(true);
 
-    time.stop();
-    cout << "Computation ended " << time.getElapsedTime() << endl;
 
-
-   SUMap indexSimplices;
-   // grad.printBoundaryMatricesSimplicialComplex(indexSimplices);
-   grad.printBoundaryMatrices(indexSimplices);
+   grad.printBoundaryMatrices();
 
 
 

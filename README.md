@@ -40,20 +40,20 @@ Example `boundaryForman.txt`
 2                         #number of filtrations
 1 2 3 6 9                 #scalar values (grades) for the first filtration
 0 1 2 5 9                 #scalar values (grades) for the second filtration
-[0] 0 : 0 2               #[0] index of the original simplex, 0 dimension of the simplex, 0 2 indices of the filtration values in the list of grades
-[1] 0 : 0 2
-[2] 0 : 1 1
-[4] 0 : 2 1
-[6] 0 : 3 0
-[8] 1 0 2 : 1 2           #[8] index of the original simplex, 1 dimension of the simplex, 0 2 indices of the boundary simplices, 1 2 indices of the filtration values in the list of grades
-[9] 1 1 2 : 1 2
-[12] 1 0 3 : 2 2
-[13] 1 1 3 : 2 2
-[19] 1 2 4 : 3 1
-[20] 1 3 4 : 3 1
-[31] 2 6 8 9 10 : 3 2
-[33] 2 5 7 9 10 : 3 3
-[37] 2 5 6 7 8 : 4 4
+0 : 0 2                   #0 dimension of the simplex, 0 2 indices of the filtration values in the list of grades
+0 : 0 2
+0 : 1 1
+0 : 2 1
+0 : 3 0
+1 0 2 : 1 2               #1 dimension of the simplex, 0 2 indices of the boundary simplices, 1 2 indices of the filtration values in the list of grades
+1 1 2 : 1 2
+1 0 3 : 2 2
+1 1 3 : 2 2
+1 2 4 : 3 1
+1 3 4 : 3 1
+2 6 8 9 10 : 3 2
+2 5 7 9 10 : 3 3
+2 5 6 7 8 : 4 4
 ```
 
 ### Usage and Requirements

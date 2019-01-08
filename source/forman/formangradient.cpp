@@ -65,19 +65,6 @@ FormanGradient::FormanGradient(int argc, char** argv)
         sort(injectiveF.begin(),injectiveF.end(),bind(&FormanGradient::filtrComparer, this,_1,_2));
     }
 
-//    vector<vector<uint> > buildFiltration = vector<vector<uint> >(sc.getVerticesNum(),vector<uint>(nField,0));
-//    for(int i=0; i<nField; i++){
-//        for(int j=0; j<sc.getVerticesNum(); j++){
-//            buildFiltration[j][i]=componentBasedFiltration[i][j];
-//        }
-//    }
-
-//    for(int i=0; i<sc.getVerticesNum(); i++){
-//        buildFiltration[i].push_back(i);
-//    }
-
-//    sort(buildFiltration.begin(),buildFiltration.end());
-
     //filtration created
     int ind=0;
     for(auto vec : injectiveF){
@@ -94,19 +81,13 @@ FormanGradient::~FormanGradient()
 
 void FormanGradient::computeFormanGradient(bool computeTopsByBatch){
 
-
-    Timer time;
-
-    time.start();
     if(computeTopsByBatch)
         sc.storeFullStar();
-    time.stop();
 
-    cout << "Tops computed " << time.getElapsedTime() << endl;
+
 
     // map<pair<int,int>, SSet > filtrationAll;
     auto foo = bind(&FormanGradient::cmpSimplexesFiltr, this,_1,_2);
-    time.start();
 
     #pragma omp parallel for
     for(uint i=0; i<filtration.size(); i++){
@@ -120,8 +101,6 @@ void FormanGradient::computeFormanGradient(bool computeTopsByBatch){
         }
 
     }
-    time.stop();
-    cout << "Forman gradient computed " << time.getElapsedTime() << endl;
 
 }
 

@@ -16,8 +16,6 @@ class FormanGradient
 {
 private:
     vector<uint> filtration; //for each vertex its filtration value
-//    vector<vector<float> > scalarValues; //for each vertex its field value [Vertices x number of fields]
-//    vector<vector<uint> > componentBasedFiltration; //injective function for each component [number of fields x Vertices ]
 
     GradientEncoding gradient;
     map<uint, SSet > criticalS;
@@ -35,8 +33,7 @@ public:
 
     //print critical points and 1-skeleton
     void print1skeleton();
-    void printBoundaryMatrices(SUMap& criticalCells);
-    void printBoundaryMatricesSimplicialComplex(SUMap &criticalCells);
+    void printBoundaryMatrices();
 
 private:
     inline int nFields(){return sc.getVertex(0).getCoordinates().size()-3;}
