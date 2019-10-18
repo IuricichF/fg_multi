@@ -378,4 +378,3 @@ void SimplicialComplex::emptyFullStar(){
     topPerVertex.clear();
 }
 
-

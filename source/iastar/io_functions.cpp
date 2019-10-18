@@ -10,7 +10,6 @@ void SimplicialComplex::readOFF(const char* file){
       {
         string line;
         int nV, nT, x;
-        bool letKnow=false;
 
         getline(fStream,line);
         if(line.compare(0,3,"OFF") != 0){

@@ -61,9 +61,9 @@ FormanGradient::FormanGradient(int argc, char** argv)
             injectiveF[j]=vector<float>(values);
         }
         //cout << "Stop" << endl;
-
-        sort(injectiveF.begin(),injectiveF.end(),bind(&FormanGradient::filtrComparer, this,_1,_2));
     }
+
+    sort(injectiveF.begin(),injectiveF.end(),bind(&FormanGradient::filtrComparer, this,_1,_2));
 
     //filtration created
     int ind=0;
@@ -83,8 +83,6 @@ void FormanGradient::computeFormanGradient(bool computeTopsByBatch){
 
     if(computeTopsByBatch)
         sc.storeFullStar();
-
-
 
     // map<pair<int,int>, SSet > filtrationAll;
     auto foo = bind(&FormanGradient::cmpSimplexesFiltr, this,_1,_2);
